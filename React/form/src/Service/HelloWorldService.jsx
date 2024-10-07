@@ -10,9 +10,21 @@ class HelloWorldService {
     return axios.get(GET_API_URL);
   }
 
-  executeGetHelloWorldTotalEarningsService() {
-    console.log("get total earnings service");
-    return axios.get(GET_TOTAL_EARNINGS);
+  executeGetHelloWorldTotalEarningsService(startofWeek, endOfWeek) {
+    console.log("start and end of week", startofWeek, endOfWeek);
+    // console.log("get total earnings service");
+    return axios.post(GET_TOTAL_EARNINGS, {
+        payPerHour: 12.7,
+        startOfWeek: startofWeek,
+        endOfWeek: endOfWeek,
+    }).then((response) => {
+        console.log("total earnings response",response.data);
+        return response.data;
+    }
+    ).catch((error) => {
+        console.log(error);
+        throw error;
+    });
   }
 
   executeGetHelloWorldService(day, month, year) {
@@ -25,7 +37,7 @@ class HelloWorldService {
             month: month,
             year: year,
         }).then((response) => {
-            console.log(response);
+            // console.log(response);
             console.log("response data ", response.data);
             return response.data;
         }).catch((error) => {          
@@ -34,7 +46,7 @@ class HelloWorldService {
   }
 
   executePostHelloWorldService(number, year, month, day, startTime, endTime, lunch) {
-    console.log("year ", day);
+    // console.log("year ", year);
     return axios
       .post(POST_API_URL, {
         message: "Hello World",
@@ -48,8 +60,8 @@ class HelloWorldService {
       })
       .then((response) => {
         // Log and return the response data
-        // console.log(response);
-        console.log("response data start ", response.data.startTime);
+         console.log(response);
+        // console.log("response data start ", response.data.startTime);
         return response.data; // Return the data here
       })
       .catch((error) => {

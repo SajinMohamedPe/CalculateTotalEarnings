@@ -1,28 +1,25 @@
 import React, { Component } from "react";
 import './App.css';
 import Form from './Components/Form';
-import HelloWorldComponent from "./Components/HelloWorldComponent";
-import DatePicker from "./Components/DatePicker";
 import DateComponent from "./Components/DateComponent";
 import TotalEarnings from "./Components/TotalEarnings";
 
 class App extends Component {
   constructor(props) {
     super(props);
-    // Step 1: Shared state for the date
     this.state = {
       year: '',
       month: '',
       day: '',
       calculateEarnings: false,
+      startOfWeek: '',
+      endOfWeek: '',
+      dayOfWeek: '',
     };
   }
 
-  // updateDate = (year, month, day) => {
-  //   this.setState({ year, month, day });
-  // };
-
   updateYear = (year) => {
+    console.log("year from app ", year);
     this.setState({ year });
   };
 
@@ -34,6 +31,20 @@ class App extends Component {
     this.setState({ day });
   };
 
+  updateStartOfWeek = (startOfWeek) => {
+    console.log("startOfWeek from app ", startOfWeek);
+    this.setState({ startOfWeek });
+  };
+
+  updateEndOfWeek = (endOfWeek) => {
+    console.log("endOfWeek from app ", endOfWeek);
+    this.setState({ endOfWeek });
+  };
+  
+  updateDayOfWeek = (dayOfWeek) => {
+    // console.log("day of week from app ", dayOfWeek);
+    this.setState({ dayOfWeek });
+  };
   handleFormSubmit = () => {
     this.setState({ calculateEarnings: true }, () => {
       // Reset to false after earnings calculation is triggered
@@ -41,29 +52,46 @@ class App extends Component {
     });
   };
 
+  setInitialDate = (year, month, day) => {
+    this.setState({ year, month, day });
+  }
+
   render() {
     const { year, month, day, calculateEarnings } = this.state;
+
     return (
       <div className="App">
-        
-        {/* <DateComponent /> */}
-        {/* <HelloWorldComponent /> */}
-        {/* <Form /> */}
-        <DateComponent 
-         year={year}
-         month={month}
-         day={day}
-         updateYear={this.updateYear}
-         updateMonth={this.updateMonth}
-         updateDay={this.updateDay}
-        />
-        <Form 
-          year={year}
-          month={month}
-          day={day}
-          onFormSubmit={this.handleFormSubmit}
-        />
-        <TotalEarnings calculateEarnings={calculateEarnings} />
+        {/* Container for DateComponent and Form side-by-side */}
+        <div className="container">
+          <DateComponent
+            setInitialDate={this.setInitialDate}
+            year={year}
+            month={month}
+            day={day}
+            updateYear={this.updateYear}
+            updateMonth={this.updateMonth}
+            updateDay={this.updateDay}
+            updateStartOfWeek={this.updateStartOfWeek}
+            updateEndOfWeek={this.updateEndOfWeek}
+            updateDayOfWeek={this.updateDayOfWeek}
+          />
+
+          <Form
+            year={year}
+            month={month}
+            day={day}
+            onFormSubmit={this.handleFormSubmit}
+          />
+        </div>
+
+        {/* TotalEarnings component below, centered */}
+        <div className="earnings-container">
+          <TotalEarnings calculateEarnings={calculateEarnings} 
+          startOfWeek={this.state.startOfWeek}
+          endOfWeek={this.state.endOfWeek}
+          dayOfWeek={this.state.dayOfWeek}/>
+          
+        </div>
       </div>
     );
   }

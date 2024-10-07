@@ -15,6 +15,7 @@ class Form extends Component {
       month: "",
       day: "",
       lunch: "60", // to be changed
+      totalWorkTime: "",
     };
   }
 
@@ -50,16 +51,18 @@ class Form extends Component {
 
   handleSubmitForm = (event) => {
     const { year, month, day } = this.props;
-    
+    console.log('Year:', year, 'Month:', month, 'Day:', day);
     // alert(`${this.state.name} ${this.state.comments} ${this.state.topic}`);
     event.preventDefault();
-    this.props.onFormSubmit();
     const timeDifference = this.calculateTimeDifference(this.state.startTime, this.state.endTime);
-    console.log('Time difference:', timeDifference);
+    // console.log('Time difference:', timeDifference);
     HelloWorldService.executePostHelloWorldService(12, year, month, day, this.state.startTime, this.state.endTime, this.state.lunch) 
       .then(responseData => {
-        console.log('Response data from :', responseData, 'minutes');
-        this.setState({ postResponse: responseData });
+        console.log('Response data:', responseData);
+        console.log('Total work time:', responseData.totalWorkTime);
+      
+        this.setState({ totalWorkTime: responseData.totalWorkTime });
+        this.props.onFormSubmit();
     })
       .catch(error => console.error('Error posting message:', error));
     
@@ -70,6 +73,7 @@ class Form extends Component {
     return (
       <form onSubmit={ this.handleSubmitForm }>
         <div>
+          <h1>Form Component</h1>
         <div>
           <p>Date from DateComponent: {year} - {month} - {day}</p>
         </div>
@@ -100,7 +104,7 @@ class Form extends Component {
             value={this.state.lunch}
             onChange={this.handleLunchChange}/>
         </div>
-        <button type="submit">Submit</button>
+        <button type="submit" style={{ marginTop: '20px' }}>Submit</button>
        
         
         <div>the response from form is {this.state.postResponse} minutes</div>

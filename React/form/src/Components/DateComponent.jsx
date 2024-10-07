@@ -2,13 +2,13 @@ import { Component } from "react";
 import HelloWorldService from "../Service/HelloWorldService";
 
 class DateComponent extends Component {
-  constructor() {
+  constructor(props) {
     // what if no props?
-    super();
+    super(props);
     this.state = {
-      year: "",
+      year: "2024",
       month: "September",
-      day: "",
+      day: "1",
       count: 0,
       message: "",
       yearInDB: "",
@@ -45,26 +45,47 @@ class DateComponent extends Component {
     }
   };
 
-
+  componentDidMount() { 
+    this.props.setInitialDate(this.state.year, this.state.month, this.state.day);
+  }
     
   handleYearChange = (event) => {
     const year = event.target.value;
     console.log("year from date component ", { year: event.target.value });
     this.setState({year: event.target.value});
-    //this.props.updateYear(year);
+    this.props.updateYear(year);
   };
+
+  getDayOfWeek = (dateString) => {
+    const date = new Date(dateString);
+    const dayOfWeek = date.getDay();
+
+    const daysToSaturday = (dayOfWeek + 1) % 7;
+    const startOfWeek = new Date(date);
+    startOfWeek.setDate(date.getDate() - daysToSaturday);
+    const endOfWeek = new Date(startOfWeek);
+    endOfWeek.setDate(startOfWeek.getDate() + 6);
+    return {
+        date: date.toDateString(),
+        dayOfWeek,
+        startOfWeek: startOfWeek.toDateString(),
+        endOfWeek: endOfWeek.toDateString(),
+    };
+  }
 
   handleMonthChange = (event) => {
     const month = event.target.value;
     this.setState({month: event.target.value});
-    this.props.updateMonth(month);
+    this.props.updateMonth(month);    
   };
 
   handleDayChange = (event) => {
     const day = event.target.value;
-    console.log("day from date component ", { day: event.target.value });
+    console.log("day from date component on day change", { day: event.target.value });
     this.setState({day: event.target.value});
     this.props.updateDay(day);
+    
+
     HelloWorldService.executeGetHelloWorldService(day, this.props.month, this.props.year)
       .then(response => {
         // const { yearOfCentury, monthOfYear, dayOfMonth } = response;
@@ -82,6 +103,13 @@ class DateComponent extends Component {
         );
         console.log("response month of year ", response.timeDifference);
       });
+
+      const selectedDate = `${this.state.year}-${this.getMonthNumber(this.state.month)}-${this.getFormattedDay(day)}`;
+      const weekInfo = this.getDayOfWeek(selectedDate);
+      this.props.updateStartOfWeek(weekInfo.startOfWeek);
+      this.props.updateEndOfWeek(weekInfo.endOfWeek);
+      this.props.updateDayOfWeek(weekInfo.date);
+      console.log("week info ", weekInfo);
   };
 
   handleSubmitClick = () => {
@@ -89,7 +117,7 @@ class DateComponent extends Component {
     alert(`The date is ${this.props.year} ${this.props.month} ${this.props.day} ${this.state.count}`);
     HelloWorldService.executePostHelloWorldService(this.state.count, this.props.year, this.props.month, this.props.day)
       .then(response => {
-        console.log("response data ", response.data);
+        // console.log("response data ", response.data);
         this.setState({ message: response.data });
         if (response.data.status === "success") {
           alert("The message is " + response.data.message);
@@ -101,11 +129,42 @@ class DateComponent extends Component {
       });
   };
 
+  getMonthNumber = (monthName) => {
+    const months = {
+      "January": "01",
+      "February": "02",
+      "March": "03",
+      "April": "04",
+      "May": "05",
+      "June": "06",
+      "July": "07",
+      "August": "08",
+      "September": "09",
+      "October": "10",
+      "November": "11",
+      "December": "12",
+    };
+    return months[monthName] || "01"; // Default to January if not found
+  };
+
+  getFormattedDay = (day) => {
+    return day < 10 ? `0${day}` : day
+}
+
   render() {
     const { year, month, day } = this.state;
     
+    console.log("dayyyyy", day)
     const daysInMonth = this.getDaysInMonth(year, month);
     // console.log("days in month ", daysInMonth);
+    const selectedDate = `${year}-${this.getMonthNumber(month)}-${this.getFormattedDay(day)}`;
+    console.log("selected date ", selectedDate);
+    // const selectedDate = "2024-06-25";  // Example: June 25, 2024
+    const formattedDate = this.getDayOfWeek(selectedDate);
+    // this.props.upda
+    // console.log(`The day of the week for ${selectedDate} is: ${formattedDate.dayOfWeek}`);
+    // console.log(`The week starts on: ${formattedDate.startOfWeek}`);
+    // console.log(`The week ends on: ${formattedDate.endOfWeek}`); $# commenting for now
 
     return (
       <div>
@@ -150,11 +209,13 @@ class DateComponent extends Component {
         <div>
             {/* <button onClick={this.handleSubmitClick}>Submit</button> */}
         </div>
-        <div><p>The message is {this.state.yearInDB}</p></div>
+        
+
+        {/* <div><p>The message is {this.state.yearInDB}</p></div>
         <div><p>The month of year is {this.state.monthInDB}</p></div>
         <div><p>The day of month is {this.state.dayInDB}</p></div>
         <div><p>The total hours worked is {this.state.totalWorkTimeInDB}</p></div>
-        <div><p>The total amount earned is {this.state.totalWorkTimeInDB * 0.21166}</p></div>
+        <div><p>The total amount earned is {this.state.totalWorkTimeInDB * 0.21166}</p></div> */}
 
         
       </div>

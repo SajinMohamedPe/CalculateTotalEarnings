@@ -40,3 +40,44 @@
 .read-the-docs {
   color: #888;
 }
+
+/* App.css */
+/* App.css */
+
+.App {
+  text-align: center;
+}
+
+.container {
+  display: flex;
+  justify-content: flex-start; /* Align components to the left */
+  align-items: flex-start;
+  padding: 20px;
+}
+
+.container > div {
+  margin: 0 10px;
+}
+
+/* Adjust DateComponent and Form widths */
+.container > :first-child {
+  flex-basis: 40%; /* DateComponent takes 40% of the space */
+  margin-right: 20px; /* Add some space between DateComponent and Form */
+}
+
+.container > :nth-child(2) {
+  flex-basis: 60%; /* Form takes 60% of the space */
+}
+
+/* Centering TotalEarnings component */
+.earnings-container {
+  display: flex;
+  justify-content: center; /* Centers the TotalEarnings horizontally */
+  margin-top: 20px; /* Adds some space above TotalEarnings */
+}
+
+/* Optional: Styling for the TotalEarnings component */
+.earnings-container h1 {
+  font-size: 24px;
+  color: #333;
+}
