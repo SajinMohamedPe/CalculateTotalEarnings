@@ -19,10 +19,9 @@ pipeline {
                     sh 'ls -alt'
                     dir('../Jenkins-app/dockerized-springboot-and-my_sql-calculate') {
                         echo '$$$$$$$'
-                        sh 'pwd' 
-                        sh 'docker --version'
+                        sh 'pwd'
                         sh 'ls -alt' 
-                        sh 'mvn clean package'
+                       
                     }
                 }
             }
