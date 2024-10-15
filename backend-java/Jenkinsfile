@@ -11,8 +11,28 @@ pipeline {
                 echo 'Hello World'
             }
         }
+        stage('Install Docker and Docker Compose') {
+            steps {
+                script {
+                    // Install Docker
+                    sh '''
+                    curl -fsSL https://get.docker.com -o get-docker.sh
+                    sh get-docker.sh
+                    sudo usermod -aG docker $USER
+                    '''
+
+                    // Install Docker Compose
+                    sh '''
+                    curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+                    chmod +x /usr/local/bin/docker-compose
+                    '''
+                }
+            }
+        }
+        
         stage('Build and Test') {
             steps {
+                
                 script {
                     sh 'pwd'
                     sh 'ls -alt'
