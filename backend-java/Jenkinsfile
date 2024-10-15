@@ -29,7 +29,8 @@ pipeline {
                     dir('../Jenkins-app/dockerized-springboot-and-my_sql-calculate') {
                         // Build the application using Maven
                         sh 'echo "hello world"'
-                        sh 'mvn clean package' // Adjust if you're using a different build tool
+                        // sh 'mvn clean package' // Adjust if you're using a different build tool
+                        sh 'docker --version'
                     }
                 }
             }
