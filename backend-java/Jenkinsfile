@@ -16,7 +16,7 @@ pipeline {
                 script {
                     sh 'pwd'
                     sh 'ls -alt'
-                    dir('./backend-java') {
+                    dir('./backend-java/calculate') {
                         sh 'pwd' // Print the current directory to verify
                         sh 'ls -alt' // List files in ./backend-java to ensure it's the correct folder
                         sh 'mvn clean package' // Run Maven build in the ./backend-java directory
