@@ -16,7 +16,7 @@ pipeline {
                 script {
                     sh 'pwd'
                     sh 'ls -alt'
-                    dir('../dockerized-springboot-and-my_sql-calculate') {
+                    dir('../Jenkins-app/dockerized-springboot-and-my_sql-calculate') {
                         echo '$$$$$$$'
                         sh 'pwd' 
                         sh 'ls -alt' 
