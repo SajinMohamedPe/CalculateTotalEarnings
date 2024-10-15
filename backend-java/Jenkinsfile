@@ -10,6 +10,8 @@ pipeline {
             steps {
                 script {
                     sh 'ls -alt'
+                    sh 'cd ./backend-java'
+                    sh 'ls -alt'
                     sh 'mvn clean package'
                 }
             }
