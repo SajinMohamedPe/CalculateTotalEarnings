@@ -16,7 +16,8 @@ pipeline {
                 script {
                     sh 'pwd'
                     sh 'ls -alt'
-                    dir('./backend-java/calculate') {
+                    dir('../dockerized-springboot-and-my_sql-calculate') {
+                        echo '$$$$$$$'
                         sh 'pwd' 
                         sh 'ls -alt' 
                         sh 'mvn clean package'
