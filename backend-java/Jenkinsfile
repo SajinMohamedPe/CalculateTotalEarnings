@@ -1,8 +1,9 @@
 pipeline {
     agent {
         docker {
-            image 'maven:3.9.0'
-            args '-v /root/.m2:/root/.m2'
+            image 'docker:latest' // Use a Docker image that has Docker installed
+            args '-v /var/run/docker.sock:/var/run/docker.sock -v $WORKSPACE:/workspace -w /workspace' // Combine args
+	    reuseNode true
         }
     }
     stages {
@@ -13,25 +14,15 @@ pipeline {
         }
         
         stage('Build and Test with Maven') {
-    	    agent {
-            	docker {
-            	    	image 'docker:latest' // Use a Docker image that has Docker installed
-    	                args '-v /var/run/docker.sock:/var/run/docker.sock -v $WORKSPACE:/workspace' // Mount the workspace
-                	args '-w /workspace' // Set the working directory
-			reuseNode true
-            		}
-        		}
-		
             steps {
                 script {
-                    sh 'pwd'
-                    sh 'ls -alt'
+                    // Ensure we are in the right directory
                     dir('../Jenkins-app/dockerized-springboot-and-my_sql-calculate') {
-                        echo '$$$$$$$'
-                        sh 'pwd' 
-                        sh 'docker --version'
-                        sh 'ls -alt' 
-                        sh 'mvn clean package'
+                        echo 'Current Directory:'
+                        sh 'pwd'
+                        sh 'ls -alt'
+                        sh 'docker --version'  // Check if docker is available
+                        sh 'mvn clean package'  // Build the Maven project
                     }
                 }
             }
@@ -45,13 +36,11 @@ pipeline {
             }
             steps {
                 script {
-                    // Assuming you need to run npm commands in the Node.js container
                     dir('../Jenkins-app/dockerized-springboot-and-my_sql-calculate') {
                         echo 'Running Node.js commands'
                         sh 'pwd'
                         sh 'ls -alt'
                         sh 'npm --version'
-                        // Run any additional Node.js commands needed here
                     }
                 }
             }
