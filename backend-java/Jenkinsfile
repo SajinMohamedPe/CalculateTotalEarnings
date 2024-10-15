@@ -37,13 +37,12 @@ pipeline {
             steps {
                 script {
                     // Assuming you need to run npm commands in the Node.js container
-                    dir('../Jenkins-app/dockerized-springboot-and-my_sql-calculate') {
-                        echo 'Running Node.js commands'
+                    
                         sh 'pwd'
                         sh 'ls -alt'
                         sh 'npm --version'
                         // Run any additional Node.js commands needed here
-                    }
+                    
                 }
             }
         }
