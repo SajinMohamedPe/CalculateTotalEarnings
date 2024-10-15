@@ -1,17 +1,57 @@
 pipeline {
     agent {
         docker {
-            image 'docker:latest' // Use a Docker image that has Docker installed
-            args '-v /var/run/docker.sock:/var/run/docker.sock -v $WORKSPACE:/workspace' // Mount the workspace
-            args '-w /workspace' // Set the working directory
+            image 'maven:3.9.0'
+            args '-v /root/.m2:/root/.m2'
         }
     }
     stages {
-        stage('Build') {
+        stage('Hello') {
+            steps {
+                echo 'Hello World'
+            }
+        }
+        
+        stage('Build and Test with Maven') {
+    	    agent {
+            	docker {
+            	    	image 'docker:latest' // Use a Docker image that has Docker installed
+    	                args '-v /var/run/docker.sock:/var/run/docker.sock -v $WORKSPACE:/workspace' // Mount the workspace
+                		args '-w /workspace' // Set the working directory
+            		}
+        		}
+		
             steps {
                 script {
-                    sh 'git --version'  // Now this should work
-                    sh 'docker build -t my-spring-boot-app .'
+                    sh 'pwd'
+                    sh 'ls -alt'
+                    dir('../Jenkins-app/dockerized-springboot-and-my_sql-calculate') {
+                        echo '$$$$$$$'
+                        sh 'pwd' 
+                        sh 'docker --version'
+                        sh 'ls -alt' 
+                        sh 'mvn clean package'
+                    }
+                }
+            }
+        }
+
+        stage('Build and Test with Node') {
+            agent {
+                docker {
+                    image 'node:18-alpine'
+                }
+            }
+            steps {
+                script {
+                    // Assuming you need to run npm commands in the Node.js container
+                    dir('../Jenkins-app/dockerized-springboot-and-my_sql-calculate') {
+                        echo 'Running Node.js commands'
+                        sh 'pwd'
+                        sh 'ls -alt'
+                        sh 'npm --version'
+                        // Run any additional Node.js commands needed here
+                    }
                 }
             }
         }
