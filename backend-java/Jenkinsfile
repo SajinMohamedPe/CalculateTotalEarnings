@@ -19,6 +19,7 @@ pipeline {
                     dir('../Jenkins-app/dockerized-springboot-and-my_sql-calculate') {
                         echo '$$$$$$$'
                         sh 'pwd' 
+                        sh 'docker-compose up -d db'
                         sh 'ls -alt' 
                         sh 'mvn clean package'
                     }
