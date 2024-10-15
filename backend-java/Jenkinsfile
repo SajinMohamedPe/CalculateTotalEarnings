@@ -9,8 +9,10 @@ pipeline {
         stage('Build and Test') {
             steps {
                 script {
+                    sh 'pwd'
                     sh 'ls -alt'
                     sh 'cd ./backend-java'
+                    sh 'pwd'
                     sh 'ls -alt'
                     sh 'mvn clean package'
                 }
