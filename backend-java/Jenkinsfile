@@ -1,109 +1,20 @@
 pipeline {
-    agent any
-
-    environment {
-        // Define environment variables for the database
-        DB_HOST = 'db'
-        DB_PORT = '3306'
-        DB_NAME = 'hello_world_schema'
-        MYSQL_ROOT_PASSWORD = 'password'
+    agent {
+        docker {
+            image 'maven:3.9.0'
+            args '-v /var/run/docker.sock:/var/run/docker.sock'
+        }
     }
-
     stages {
-        stage('Checkout') {
-            steps {
-                // Checkout the code from your repository
-                checkout scm
-            }
-        }
-
         stage('Build') {
-            agent {
-                docker {
-                    image 'maven:3.9.0'
-                    args '-v /root/.m2:/root/.m2'
-                    reuseNode true
-                }
-            }
             steps {
                 script {
-                    dir('../Jenkins-app/dockerized-springboot-and-my_sql-calculate') {
-                        // Build the application using Maven
-                        sh 'echo "hello world"'
-                        // sh 'mvn clean package' // Adjust if you're using a different build tool
-                        sh 'docker --version'
-                    }
-                }
-            }
-        }
-
-
-        stage('Build Docker Image') {
-            steps {
-                script {
-                    // Build the Docker image for the Spring Boot application
+                    // Ensure the Docker command is run inside the correct context
+                    sh 'docker --version'  // Now this should work
                     sh 'docker build -t my-spring-boot-app .'
                 }
             }
         }
-
-        stage('Run Docker Compose') {
-            steps {
-                script {
-                    // Run Docker Compose to start the services
-                    sh 'docker-compose up -d'
-                }
-            }
-        }
-
-        stage('Wait for DB') {
-            steps {
-                script {
-                    // Wait for MySQL to be ready
-                    waitUntil {
-                        script {
-                            // Check if MySQL is ready
-                            def result = sh(script: 'docker exec db mysqladmin -uroot -ppassword ping', returnStatus: true)
-                            return result == 0
-                        }
-                    }
-                }
-            }
-        }
-
-        stage('Integration Tests') {
-            steps {
-                script {
-                    // Run your integration tests here, assuming they're set up
-                    sh './mvnw verify' // Adjust if needed
-                }
-            }
-        }
-
-        stage('Clean Up') {
-            steps {
-                script {
-                    // Stop and remove containers after testing
-                    sh 'docker-compose down'
-                }
-            }
-        }
-    }
-
-    post {
-        always {
-            // Clean up any resources if needed
-            script {
-                sh 'docker-compose down'
-            }
-        }
-
-        success {
-            echo 'Build and tests completed successfully!'
-        }
-
-        failure {
-            echo 'There were issues during the build or testing process.'
-        }
+        // Additional stages...
     }
 }
