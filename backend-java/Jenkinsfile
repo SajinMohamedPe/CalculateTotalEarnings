@@ -10,7 +10,7 @@ pipeline {
             steps {
                 script {
                     // Ensure the Docker command is run inside the correct context
-                    sh 'docker --version'  // Now this should work
+                    sh 'git --version'  // Now this should work
                     sh 'docker build -t my-spring-boot-app .'
                 }
             }
