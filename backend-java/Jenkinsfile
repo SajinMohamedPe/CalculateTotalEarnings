@@ -17,8 +17,13 @@ pipeline {
                 script {
                     sh 'pwd'
                     sh 'ls -alt'
-                    // Run Maven commands in the Maven container
-                    sh 'mvn clean package'
+                    dir('../Jenkins-app/dockerized-springboot-and-my_sql-calculate') {
+                        echo '$$$$$$$'
+                        sh 'pwd' 
+                        sh 'docker --version'
+                        sh 'ls -alt' 
+                        sh 'mvn clean package'
+                    }
                 }
             }
         }
