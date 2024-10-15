@@ -15,6 +15,7 @@ pipeline {
         stage('Build and Test') {
             agent {
                 docker {
+                    sh 'echo "hello"'
                     image 'node:18-alpine'
                 }
             }
