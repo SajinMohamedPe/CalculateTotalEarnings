@@ -12,24 +12,32 @@ pipeline {
             }
         }
         
-        stage('Build and Test') {
+        stage('Build and Test with Maven') {
+            steps {
+                script {
+                    sh 'pwd'
+                    sh 'ls -alt'
+                    // Run Maven commands in the Maven container
+                    sh 'mvn clean package'
+                }
+            }
+        }
+
+        stage('Build and Test with Node') {
             agent {
                 docker {
-                    sh 'echo "hello"'
                     image 'node:18-alpine'
                 }
             }
             steps {
                 script {
-                    sh 'pwd'
-                    sh 'ls -alt'
-                    sh 'npm --version'
+                    // Assuming you need to run npm commands in the Node.js container
                     dir('../Jenkins-app/dockerized-springboot-and-my_sql-calculate') {
-                        echo '$$$$$$$'
-                        sh 'pwd' 
-                        sh 'docker --version'
-                        sh 'ls -alt' 
-                        sh 'mvn clean package'
+                        echo 'Running Node.js commands'
+                        sh 'pwd'
+                        sh 'ls -alt'
+                        sh 'npm --version'
+                        // Run any additional Node.js commands needed here
                     }
                 }
             }
