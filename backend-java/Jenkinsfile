@@ -21,7 +21,7 @@ pipeline {
                         echo 'Current Directory:'
                         sh 'pwd'
                         sh 'ls -alt'
-                        sh 'docker --version'  // Check if docker is available
+                        sh 'docker-compose --version'  // Check if docker is available
                         sh 'mvn clean package'  // Build the Maven project
                     }
                 }
